@@ -152,7 +152,7 @@ export function ReportsView() {
                   <div className="flex justify-between items-center">
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{cat.name}</span>
                     <span className="font-mono font-bold text-slate-900 dark:text-white">
-                      ${val.toLocaleString(undefined, { minimumFractionDigits: 2 })} ({pct.toFixed(1)}%)
+                      {formatZAR(val)} ({pct.toFixed(1)}%)
                     </span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">

@@ -22,7 +22,7 @@ export function CreateRequestModal({
   const { success, error } = useToast();
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [productId, setProductId] = useState<number | ''>('');
+  const [productId, setProductId] = useState<string | number | ''>('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState<number | ''>(1);
   const [reason, setReason] = useState('');
@@ -47,9 +47,9 @@ export function CreateRequestModal({
     }
   }, [isOpen, defaultProduct, user]);
 
-  const handleProductChange = (id: number) => {
+  const handleProductChange = (id: string | number) => {
     setProductId(id);
-    const p = products.find((x) => x.id === id) || null;
+    const p = products.find((x) => String(x.id) === String(id)) || null;
     setSelectedProduct(p);
   };
 

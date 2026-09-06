@@ -28,10 +28,10 @@ export function ProductModal({
   const [sku, setSku] = useState('');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [categoryId, setCategoryId] = useState<number | ''>('');
+  const [categoryId, setCategoryId] = useState<string | number | ''>('');
   const [brand, setBrand] = useState('');
-  const [supplierId, setSupplierId] = useState<number | ''>('');
-  const [warehouseId, setWarehouseId] = useState<number | ''>('');
+  const [supplierId, setSupplierId] = useState<string | number | ''>('');
+  const [warehouseId, setWarehouseId] = useState<string | number | ''>('');
   const [unitOfMeasure, setUnitOfMeasure] = useState('units');
   const [costPrice, setCostPrice] = useState<number | ''>(0);
   const [sellingPrice, setSellingPrice] = useState<number | ''>(0);
@@ -108,10 +108,10 @@ export function ProductModal({
         sku: sku.trim(),
         name: name.trim(),
         description: description.trim(),
-        category_id: Number(categoryId),
+        category_id: categoryId,
         brand: brand.trim(),
-        supplier_id: supplierId ? Number(supplierId) : undefined,
-        warehouse_id: Number(warehouseId),
+        supplier_id: supplierId || undefined,
+        warehouse_id: warehouseId,
         unit_of_measure: unitOfMeasure,
         cost_price: Number(costPrice) || 0,
         selling_price: Number(sellingPrice) || 0,
@@ -225,7 +225,7 @@ export function ProductModal({
               <select
                 required
                 value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : '')}
+                onChange={(e) => setCategoryId(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="">Select Category</option>
@@ -252,7 +252,7 @@ export function ProductModal({
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Supplier</label>
               <select
                 value={supplierId}
-                onChange={(e) => setSupplierId(e.target.value ? Number(e.target.value) : '')}
+                onChange={(e) => setSupplierId(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="">Select Supplier</option>
@@ -274,7 +274,7 @@ export function ProductModal({
               <select
                 required
                 value={warehouseId}
-                onChange={(e) => setWarehouseId(e.target.value ? Number(e.target.value) : '')}
+                onChange={(e) => setWarehouseId(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
               >
                 <option value="">Select Warehouse</option>

@@ -12,7 +12,7 @@ interface CreatePOModalProps {
 }
 
 interface ItemRow {
-  product_id: number;
+  product_id: string | number;
   quantity: number;
   unit_price: number;
 }
@@ -24,15 +24,15 @@ export function CreatePOModal({ isOpen, onClose, onCreated }: CreatePOModalProps
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const [supplierId, setSupplierId] = useState<number | ''>('');
-  const [warehouseId, setWarehouseId] = useState<number | ''>('');
+  const [supplierId, setSupplierId] = useState<string | number | ''>('');
+  const [warehouseId, setWarehouseId] = useState<string | number | ''>('');
   const [expectedDate, setExpectedDate] = useState('');
   const [notes, setNotes] = useState('');
-  const [taxRate, setTaxRate] = useState<number>(8);
+  const [taxRate, setTaxRate] = useState<number>(15);
   const [discountAmount, setDiscountAmount] = useState<number>(0);
 
   const [items, setItems] = useState<ItemRow[]>([
-    { product_id: 0, quantity: 10, unit_price: 0 },
+    { product_id: '', quantity: 10, unit_price: 0 },
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -85,10 +85,10 @@ export function CreatePOModal({ isOpen, onClose, onCreated }: CreatePOModalProps
     setItems((prev) => {
       const copy = [...prev];
       if (field === 'product_id') {
-        const prod = products.find((p) => p.id === Number(value));
+        const prod = products.find((p) => String(p.id) === String(value));
         copy[idx] = {
           ...copy[idx],
-          product_id: Number(value),
+          product_id: value,
           unit_price: prod ? prod.cost_price : copy[idx].unit_price,
         };
       } else {
@@ -119,11 +119,11 @@ export function CreatePOModal({ isOpen, onClose, onCreated }: CreatePOModalProps
     setLoading(true);
     try {
       const res = await api.createPurchaseOrder({
-        supplier_id: Number(supplierId),
-        warehouse_id: Number(warehouseId),
+        supplier_id: supplierId,
+        warehouse_id: warehouseId,
         expected_delivery_date: expectedDate,
         notes: notes.trim(),
-        tax_rate: Number(taxRate),
+        tax_rate: Number(taxRate) / 100,
         discount_amount: Number(discountAmount),
         items: items.map((it) => ({
           product_id: it.product_id,
@@ -227,7 +227,7 @@ export function CreatePOModal({ isOpen, onClose, onCreated }: CreatePOModalProps
               <div className="grid grid-cols-12 gap-2 px-3 py-2 bg-slate-50 dark:bg-slate-900 text-[11px] font-bold text-slate-500 uppercase">
                 <div className="col-span-5">Product SKU / Name</div>
                 <div className="col-span-2">Quantity</div>
-                <div className="col-span-2">Unit Price ($)</div>
+                <div className="col-span-2">Unit Price (R)</div>
                 <div className="col-span-2 text-right">Line Total</div>
                 <div className="col-span-1 text-right">Del</div>
               </div>

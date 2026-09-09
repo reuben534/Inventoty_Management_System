@@ -24,16 +24,33 @@ let isConnected = false;
 export async function connectDb(): Promise<typeof mongoose> {
   if (isConnected) return mongoose;
 
-  try {
-    const conn = await mongoose.connect(MONGODB_URI);
-    isConnected = true;
-    console.log(`Connected to MongoDB: ${conn.connection.host}/${conn.connection.name}`);
-    await seedInitialData();
-    return conn;
-  } catch (err) {
-    console.error('MongoDB connection error:', err);
-    throw err;
+  mongoose.set('bufferCommands', false);
+
+  const maxAttempts = 12;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const conn = await mongoose.connect(MONGODB_URI, {
+        serverSelectionTimeoutMS: 5000,
+      });
+
+      isConnected = true;
+      console.log(`Connected to MongoDB: ${conn.connection.host}/${conn.connection.name}`);
+      await seedInitialData();
+      return conn;
+    } catch (err) {
+      const isLastAttempt = attempt === maxAttempts;
+      console.error(`MongoDB connection attempt ${attempt}/${maxAttempts} failed:`, err);
+
+      if (isLastAttempt) {
+        throw err;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
   }
+
+  throw new Error('MongoDB connection failed after retries');
 }
 
 export async function createAuditLog(
